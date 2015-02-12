@@ -150,6 +150,13 @@ Meteor.methods({
 
     Grains.update(selector, { $set: { appVersion: version, packageId: packageId }}, {multi: true});
   },
+  
+  skipUpgradeGrains: function (appId) {
+    check(appId, String);
+    
+    Session.set("selectedApp", package.appId);
+    Router.go("root", {}, {replaceState: true});
+  }
 });
 
 if (Meteor.isClient) {
@@ -199,6 +206,10 @@ if (Meteor.isClient) {
 
     "click #upgradeGrains": function (event) {
       Meteor.call("upgradeGrains", this.appId, this.version, this.packageId);
+    },
+    
+    "click #skipUpgradeGrains": function (event) {
+      Meteor.call("skipUpgradeGrains", this.appId);
     }
   });
 
