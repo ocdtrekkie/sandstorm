@@ -149,13 +149,6 @@ Meteor.methods({
     }
 
     Grains.update(selector, { $set: { appVersion: version, packageId: packageId }}, {multi: true});
-  },
-  
-  skipUpgradeGrains: function (appId) {
-    check(appId, String);
-    
-    Session.set("selectedApp", package.appId);
-    Router.go("root", {}, {replaceState: true});
   }
 });
 
@@ -191,6 +184,13 @@ if (Meteor.isClient) {
     }
   }
 
+  skipUpgradeGrains = function(appId) {
+    check(appId, String);
+    
+    Session.set("selectedApp", package.appId);
+    Router.go("root", {}, {replaceState: true});
+  }
+
   Template.install.events({
     "click #retry": function (event) {
       Meteor.call("ensureInstalled", this.packageId, this.packageUrl, true);
@@ -209,7 +209,7 @@ if (Meteor.isClient) {
     },
     
     "click #skipUpgradeGrains": function (event) {
-      Meteor.call("skipUpgradeGrains", this.appId);
+      skipUpgradeGrains(this.appId);
     }
   });
 
